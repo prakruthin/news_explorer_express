@@ -1,0 +1,56 @@
+const mongoose = require("mongoose");
+const validator = require("validator");
+
+const articleSchema = new mongoose.Schema({
+  keyword: {
+    type: String,
+    required: true,
+    minlength: 2,
+    maxlength: 30,
+  },
+  title: {
+    type: String,
+    required: true,
+  },
+  text: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: String,
+    required: true,
+    // default: Date.now,
+  },
+  source: {
+    type: String,
+    required: true,
+  },
+  link: {
+    type: String,
+    required: [true, "The link field is required"],
+    validate: {
+      validator(value) {
+        return validator.isURL(value);
+      },
+      message: "You must enter a valid link",
+    },
+  },
+  image: {
+    type: String,
+    required: [true, "The image field is required"],
+    validate: {
+      validator(value) {
+        return validator.isURL(value);
+      },
+      message: "You must enter a valid URL",
+    },
+  },
+  owner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "user",
+    required: [true, "The owner field is required"],
+    select: false,
+  },
+});
+
+module.exports = mongoose.model("article", articleSchema);
