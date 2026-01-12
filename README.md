@@ -2,6 +2,11 @@
 
 A Node.js + Express backend for a news application that allows users to manage accounts and save news articles from third-party APIs.
 
+## Live Demo
+
+Check it out here:
+[NewsExplorer Backend](https://api.gcp-ne.blinklab.com/)
+
 ## Frontend Repository
 
 The frontend for this project is available here:  
@@ -11,25 +16,63 @@ The frontend for this project is available here:
 
 ### User Management
 
-| Method | Endpoint  | Description                                           |
-| ------ | --------- | ----------------------------------------------------- |
-| POST   | /signup   | Register a new user (name, email, password).          |
-| POST   | /signin   | Login with email and password to receive a JWT token. |
-| GET    | /users/me | Get details of the currently authenticated user.      |
+| Method | Endpoint  | Description                                           | Sample Body (JSON)                                                                         |
+| ------ | --------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| POST   | /signup   | Register a new user (name, email, password).          | `{ "name": "testuser", "email": "testuser@example.com", "password": "StrongPassword123" }` |
+| POST   | /signin   | Login with email and password to receive a JWT token. | `{ "email": "testuser@example.com", "password": "StrongPassword123" }`                     |
+| GET    | /users/me | Get details of the currently authenticated user.      | N/A (use Authorization header)                                                             |
 
 ### Articles
 
-| Method | Endpoint             | Description                                          |
-| ------ | -------------------- | ---------------------------------------------------- |
-| GET    | /articles            | Fetch all saved articles (authenticated users only). |
-| POST   | /articles            | Save a new article (authenticated users only).       |
-| DELETE | /articles/:articleId | Delete your own saved article only.                  |
+| Method | Endpoint             | Description                                                    | Sample Body (JSON)                                                                                                                                                                                                               |
+| ------ | -------------------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| GET    | /articles            | Fetch all saved articles (authenticated users only).           | N/A                                                                                                                                                                                                                              |
+| POST   | /articles            | Save a new article (authenticated users only).                 | `{ "keyword": "Tech", "title": "Node.js Routing", "text": "Testing Express routes on production", "date": "2026-01-12", "source": "BlinkLab", "link": "https://example.com/article", "image": "https://example.com/image.png" }` |
+| DELETE | /articles/:articleId | Delete your own saved article only (authenticated users only). | N/A                                                                                                                                                                                                                              |
 
 ### Authentication & Authorization
 
 - JWT-based authentication using `Bearer <token>` in the Authorization header.
 - Protected routes require a valid token (`/users/me`, `/articles`).
 - Users can only delete their own articles.
+
+#### Example Header in Postman:
+
+    Authorization: Bearer <YOUR_JWT_TOKEN>
+
+### Testing with Postman
+
+1. Signup
+
+- POST https://api.gcp-ne.blinklab.com/signup
+- Body: JSON (see table above)
+
+2. Signin
+
+- POST https://api.gcp-ne.blinklab.com/signin
+- Body: JSON (see table above)
+- Copy the returned token for authenticated requests.
+
+3. Get Current User
+
+- GET https://api.gcp-ne.blinklab.com/users/me
+- Header: Authorization: Bearer <YOUR_JWT_TOKEN>
+
+4. Get Articles
+
+- GET https://api.gcp-ne.blinklab.com/articles
+- Header: Authorization: Bearer <YOUR_JWT_TOKEN>
+
+5. Create Article
+
+- POST https://api.gcp-ne.blinklab.com/articles
+- Header: Authorization: Bearer <YOUR_JWT_TOKEN>
+- Body: JSON (see table above)
+
+6. Delete Article
+
+- DELETE https://api.gcp-ne.blinklab.com/articles/:articleId
+- Header: Authorization: Bearer <YOUR_JWT_TOKEN>
 
 ## Error Handling
 
@@ -57,10 +100,10 @@ The frontend for this project is available here:
 
 1.  **Clone the repo**
 
-```bash
-git clone https://github.com/prakruthin/news-explorer-backend.git
-cd news-explorer-backend
-```
+    ```bash
+    git clone https://github.com/prakruthin/news-explorer-backend.git
+    cd news-explorer-backend
+    ```
 
 2.  **Install dependencies**
     ```bash
@@ -86,7 +129,5 @@ cd news-explorer-backend
     ```
 
 ## Future Improvements
-
-- Cloud storage for images.
 
 - CI/CD pipeline with GitHub Actions.
