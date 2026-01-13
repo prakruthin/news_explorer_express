@@ -36,43 +36,69 @@ The frontend for this project is available here:
 - Protected routes require a valid token (`/users/me`, `/articles`).
 - Users can only delete their own articles.
 
-#### Example Header in Postman:
+### Testing the API with curl
 
-    Authorization: Bearer <YOUR_JWT_TOKEN>
+All protected routes require a JWT token obtained from the /signin endpoint.
 
-### Testing with Postman
+1. Signup (Register User)
+   ```bash
+   curl -X POST https://api.gcp-ne.blinklab.com/signup \
+     -H "Content-Type: application/json" \
+     -d '{
+       "name": "testuser",
+       "email": "testuser@example.com",
+       "password": "StrongPassword123"
+     }'
+   ```
+2. Signin (Login)
 
-1. Signup
+   ```bash
+   curl -X POST https://api.gcp-ne.blinklab.com/signin \
+     -H "Content-Type: application/json" \
+     -d '{
+       "email": "testuser@example.com",
+       "password": "StrongPassword123"
+     }'
+   ```
 
-- POST https://api.gcp-ne.blinklab.com/signup
-- Body: JSON (see table above)
+   The response returns a JWT token:
 
-2. Signin
-
-- POST https://api.gcp-ne.blinklab.com/signin
-- Body: JSON (see table above)
-- Copy the returned token for authenticated requests.
+   `{ "token": "<YOUR_JWT_TOKEN>" }`
 
 3. Get Current User
 
-- GET https://api.gcp-ne.blinklab.com/users/me
-- Header: Authorization: Bearer <YOUR_JWT_TOKEN>
+   ```bash
+   curl -X GET https://api.gcp-ne.blinklab.com/users/me \
+    -H "Authorization: Bearer <YOUR_JWT_TOKEN>"
+   ```
 
-4. Get Articles
+4. Get Saved Articles
+   ```bash
+   curl -X GET https://api.gcp-ne.blinklab.com/articles \
+    -H "Authorization: Bearer <YOUR_JWT_TOKEN>"
+   ```
+5. Create (Save) an Article
+   ```bash
+   curl -X POST https://api.gcp-ne.blinklab.com/articles \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer <YOUR_JWT_TOKEN>" \
+    -d '{
+   "keyword": "Tech",
+   "title": "Node.js Routing",
+   "text": "Testing Express routes on production",
+   "date": "2026-01-12",
+   "source": "BlinkLab",
+   "link": "https://example.com/article",
+   "image": "https://example.com/image.png"
+   }'
+   ```
+6. Delete an Article
+   ```bash
+   curl -X DELETE https://api.gcp-ne.blinklab.com/articles/<ARTICLE_ID> \
+     -H "Authorization: Bearer <YOUR_JWT_TOKEN>"
+   ```
+      ⚠️ Users can delete only their own articles.
 
-- GET https://api.gcp-ne.blinklab.com/articles
-- Header: Authorization: Bearer <YOUR_JWT_TOKEN>
-
-5. Create Article
-
-- POST https://api.gcp-ne.blinklab.com/articles
-- Header: Authorization: Bearer <YOUR_JWT_TOKEN>
-- Body: JSON (see table above)
-
-6. Delete Article
-
-- DELETE https://api.gcp-ne.blinklab.com/articles/:articleId
-- Header: Authorization: Bearer <YOUR_JWT_TOKEN>
 
 ## Error Handling
 
