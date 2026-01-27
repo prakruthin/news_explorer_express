@@ -21,7 +21,7 @@ const validateArticles = celebrate({
     text: Joi.string().required().messages({
       "string.empty": "The text feild must be filled in",
     }),
-    date: Joi.string().required().messages({
+    date: Joi.date().iso().required().messages({
       "string.empty": "The date feild must be filled in",
       "string.isoDate": "The date field must be a valid ISO date",
     }),
@@ -35,6 +35,9 @@ const validateArticles = celebrate({
     image: Joi.string().required().custom(validateUrl).messages({
       "string.empty": 'The "image" field must be filled in',
       "string.uri": 'the "image" field must be a valid url',
+    }),
+    owner: Joi.string().hex().length(24).required().messages({
+      "string.length": "Owner must be a valid user ID",
     }),
   }),
 });
