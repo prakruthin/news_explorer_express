@@ -40,30 +40,6 @@ const createArticle = (req, res, next) => {
     });
 };
 
-// const deleteArticle = (req, res, next) => {
-//   const { articleId } = req.params;
-//   Article.findById(articleId)
-//     .select("+owner")
-//     .orFail()
-//     .then((article) => {
-//       if (!article.owner.equals(req.user._id)) {
-//         return next(new ForbiddenError("You can only delete your own items"));
-//       }
-//       return Article.findByIdAndDelete(articleId)
-//         .orFail()
-//         .then((deletedItem) => res.status(200).send({ data: deletedItem }));
-//     })
-//     .catch((err) => {
-//       if (err.name === "DocumentNotFoundError") {
-//         return next(new NotFoundError("Requested resource not found"));
-//       }
-//       if (err.name === "CastError") {
-//         return next(new BadRequestError("Invalid data provided"));
-//       }
-//       return next(err);
-//     });
-// };
-
 const deleteArticle = (req, res, next) => {
   const { articleId } = req.params;
 
@@ -75,10 +51,11 @@ const deleteArticle = (req, res, next) => {
         return next(new ForbiddenError("You can only delete your own items"));
       }
 
-      // Delete by ID
-      return Article.findByIdAndDelete(articleId).then((deletedItem) => {
-        res.status(200).send({ data: deletedItem });
-      });
+      return Article.findByIdAndDelete(articleId)
+        .orFail()
+        .then((deletedItem) => {
+          res.status(200).send({ data: deletedItem });
+        });
     })
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
